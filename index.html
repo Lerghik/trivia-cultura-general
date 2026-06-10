@@ -31,21 +31,29 @@
             <div class="opciones-grid" id="contenedor-opciones"></div>
         </section>
 
-        <section id="pantalla-ranking" class="oculto">
-            <h2>Resultados del Día</h2>
-            <p id="resultado-usuario" style="text-align: center; font-size: 1.1rem; margin-bottom: 1.5rem; font-weight: bold;"></p>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Puesto</th>
-                        <th>Nick</th>
-                        <th>Puntaje</th>
-                    </tr>
-                </thead>
-                <tbody id="tabla-cuerpo"></tbody>
-            </table>
-            <button id="btn-reiniciar" style="margin-top: 1.5rem; background-color: #666;">Volver a Intentar</button>
-        </section>
+        <section id="pantalla-ranking" class="oculto" class="container">
+    <h2>Tabla de Clasificación</h2>
+    <p id="resultado-usuario"></p>
+
+    <div style="display: flex; gap: 10px; margin-bottom: 1.5rem; justify-content: center;">
+        <button id="btn-tab-top3" style="background-color: #1A237E; padding: 0.6rem 1rem; font-size: 0.9rem;">🏆 Top 3</button>
+        <button id="btn-tab-general" style="background-color: #757575; padding: 0.6rem 1rem; font-size: 0.9rem;">📋 General</button>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Puesto</th>
+                <th>Usuario</th>
+                <th>Puntaje</th>
+            </tr>
+        </thead>
+        <tbody id="tabla-cuerpo">
+            </tbody>
+    </table>
+
+    <button id="btn-reiniciar" style="margin-top: 2rem;">Volver a Jugar</button>
+</section>
 
     </div>
 

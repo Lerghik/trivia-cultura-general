@@ -102,13 +102,15 @@ window.onload = async function() {
         cargarPregunta();
     }
 
+    // NUEVA VARIABLE GLOBAL INTERNA (Solo para manejar las pestañas)
+    let listaRankingsGlobal = []; 
+
     async function finalizarJuego() {
         pJuego.classList.add('oculto');
         pRanking.classList.remove('oculto');
         document.getElementById('resultado-usuario').innerText = `¡Buen trabajo! Sumaste ${juego.puntaje} puntos.`;
 
         // 2. ENVIAR EL RESULTADO DEL USUARIO A SUPABASE
-        // CAMBIO AQUÍ: miSupabase en lugar de supabase
         const { error: errorInsert } = await miSupabase
             .from('ranking')
             .insert([{ nick: juego.nick, puntaje: juego.puntaje }]);
@@ -117,8 +119,7 @@ window.onload = async function() {
             console.error("Error al guardar puntaje en ranking:", errorInsert);
         }
 
-        // 3. TRAER EL RANKING ACTUALIZADO DESDE SUPABASE
-        // CAMBIO AQUÍ: miSupabase en lugar de supabase
+        // 3. TRAER EL RANKING COMPLETO DESDE SUPABASE
         const { data: rankingsDelDia, error: errorRanking } = await miSupabase
             .from('ranking')
             .select('*')
@@ -129,31 +130,52 @@ window.onload = async function() {
             return;
         }
 
+        // Guardamos los datos en nuestra variable para cambiar de pestaña sin volver a consultar a internet
+        listaRankingsGlobal = rankingsDelDia;
+
+        // Configuración de los botones de las pestañas
+        const btnTop3 = document.getElementById('btn-tab-top3');
+        const btnGeneral = document.getElementById('btn-tab-general');
+
+        // Acción al hacer clic en Top 3
+        btnTop3.onclick = function() {
+            btnTop3.style.backgroundColor = "#1A237E"; // Azul activo
+            btnGeneral.style.backgroundColor = "#757575"; // Gris inactivo
+            dibujarTabla(listaRankingsGlobal.slice(0, 3)); // Cortamos la lista para mostrar solo los primeros 3
+        };
+
+        // Acción al hacer clic en General
+        btnGeneral.onclick = function() {
+            btnTop3.style.backgroundColor = "#757575"; // Gris inactivo
+            btnGeneral.style.backgroundColor = "#1A237E"; // Azul activo
+            dibujarTabla(listaRankingsGlobal); // Mostramos la lista completa
+        };
+
+        // Por defecto al terminar el juego, mostramos el Top 3 para arrancar con impacto visual
+        btnTop3.click();
+    }
+
+    // NUEVA FUNCIÓN AUXILIAR: Se encarga de pintar las filas en la pantalla
+    function dibujarTabla(datosAFiltrar) {
         const tablaCuerpo = document.getElementById('tabla-cuerpo');
         tablaCuerpo.innerHTML = "";
 
-        rankingsDelDia.forEach((player, index) => {
+        datosAFiltrar.forEach((player, index) => {
             const fila = document.createElement('tr');
+            
+            // Buscamos la posición real del jugador en el ranking general original
+            let posicionReal = listaRankingsGlobal.findIndex(p => p.id === player.id) + 1;
+
             if(player.nick === juego.nick && player.puntaje === juego.puntaje) {
                 fila.className = "mi-puesto";
             }
-            let medalla = index + 1;
-            if(index === 0) medalla = "🥇";
-            if(index === 1) medalla = "🥈";
-            if(index === 2) medalla = "🥉";
+            
+            let medalla = posicionReal;
+            if(posicionReal === 1) medalla = "🥇";
+            if(posicionReal === 2) medalla = "🥈";
+            if(posicionReal === 3) medalla = "🥉";
 
             fila.innerHTML = `<td>${medalla}</td><td>${player.nick}</td><td>${player.puntaje} pts</td>`;
             tablaCuerpo.appendChild(fila);
         });
     }
-
-    document.getElementById('btn-reiniciar').onclick = function() {
-        juego.preguntaActual = 0;
-        juego.puntaje = 0;
-        pRanking.classList.add('oculto');
-        pInicio.classList.remove('oculto');
-        const userBadge = document.getElementById('usuario-activo');
-        if (userBadge) userBadge.innerText = "";
-        inputNick.value = "";
-    };
-};
