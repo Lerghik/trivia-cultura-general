@@ -1,6 +1,6 @@
 // CONFIGURACIÓN DE TU PROYECTO
 const SUPABASE_URL = "https://ebglmoumxipvrtpsgkrw.supabase.co"; 
-const SUPABASE_ANON_KEY = "sb_publishable_rKZ87GIXN8TtKlOsdeYN2g__gocmwd0"; // Asegurate de poner tu Key acá adentro
+const SUPABASE_ANON_KEY = "sb_publishable_rKZ87GIXN8TtKlOsdeYN2g__gocmwd0"; // <-- PONÉ ACÁ TU KEY REAL ENTRE COMILLAS
 
 // Inicializamos la conexión usando 'miSupabase' para evitar choques globales
 const miSupabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -130,30 +130,36 @@ window.onload = async function() {
         const btnTop3 = document.getElementById('btn-tab-top3');
         const btnGeneral = document.getElementById('btn-tab-general');
 
-        btnTop3.onclick = function() {
-            btnTop3.style.backgroundColor = "#1A237E"; 
-            btnGeneral.style.backgroundColor = "#757575"; 
-            dibujarTabla(listaRankingsGlobal.slice(0, 3)); 
-        };
+        if (btnTop3 && btnGeneral) {
+            btnTop3.onclick = function() {
+                btnTop3.style.backgroundColor = "#1A237E"; 
+                btnGeneral.style.backgroundColor = "#757575"; 
+                dibujarTabla(listaRankingsGlobal.slice(0, 3)); 
+            };
 
-        btnGeneral.onclick = function() {
-            btnTop3.style.backgroundColor = "#757575"; 
-            btnGeneral.style.backgroundColor = "#1A237E"; 
-            dibujarTabla(listaRankingsGlobal); 
-        };
+            btnGeneral.onclick = function() {
+                btnTop3.style.backgroundColor = "#757575"; 
+                btnGeneral.style.backgroundColor = "#1A237E"; 
+                dibujarTabla(listaRankingsGlobal); 
+            };
 
-        // Activamos la pestaña Top 3 por defecto al entrar
-        btnTop3.click();
+            // Activamos la pestaña Top 3 por defecto al entrar
+            btnTop3.click();
+        } else {
+            // Si por alguna razón no encuentra las pestañas, dibuja el ranking completo directo
+            dibujarTabla(listaRankingsGlobal);
+        }
     }
 
     function dibujarTabla(datosAFiltrar) {
         const tablaCuerpo = document.getElementById('tabla-cuerpo');
+        if (!tablaCuerpo) return;
+        
         tablaCuerpo.innerHTML = "";
 
         datosAFiltrar.forEach((player) => {
             const fila = document.createElement('tr');
             
-            // Calculamos su posición real basándonos en la lista global completa
             let posicionReal = listaRankingsGlobal.findIndex(p => p.id === player.id) + 1;
 
             if(player.nick === juego.nick && player.puntaje === juego.puntaje) {
@@ -179,4 +185,4 @@ window.onload = async function() {
         if (userBadge) userBadge.innerText = "";
         inputNick.value = "";
     };
-}; // <--- ¡Acá está la llave de cierre que faltaba y rompía todo!
+};
