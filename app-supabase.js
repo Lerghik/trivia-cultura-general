@@ -1,12 +1,13 @@
 // CONFIGURACIÓN DE TU PROYECTO
-const SUPABASE_URL = "https://ebglmoumxipvrtpsgkrw.supabase.co"; // Poné acá tu link con comillas
-const SUPABASE_ANON_KEY = "sb_publishable_rKZ87GIXN8TtKlOsdeYN2g__gocmwd0"; // Poné acá tu key con comillas
+const SUPABASE_URL = "https://ebglmoumxipvrtpsgkrw.supabase.co"; 
+const SUPABASE_ANON_KEY = "sb_publishable_rKZ87GIXN8TtKlOsdeYN2g__gocmwd0"; // Asegurate de poner tu Key acá adentro
 
-// CAMBIO AQUÍ: Usamos 'miSupabase' para evitar que choque con el nombre de la librería externa
+// Inicializamos la conexión usando 'miSupabase' para evitar choques globales
 const miSupabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let bancoPreguntas = []; 
 let juego = { nick: "", preguntaActual: 0, puntaje: 0 };
+let listaRankingsGlobal = []; // Guarda los puntajes para alternar pestañas al instante
 
 window.onload = async function() {
     const pInicio = document.getElementById('pantalla-inicio');
@@ -17,7 +18,7 @@ window.onload = async function() {
 
     console.log("Intentando conectar a Supabase para traer preguntas...");
 
-    // CAMBIO AQUÍ: miSupabase en lugar de supabase
+    // 1. TRAEMOS LAS PREGUNTAS DESDE SUPABASE
     const { data: preguntasObtenidas, error: errorPreguntas } = await miSupabase
         .from('preguntas')
         .select('*');
@@ -29,21 +30,19 @@ window.onload = async function() {
     }
 
     if (!preguntasObtenidas || preguntasObtenidas.length === 0) {
-        console.error("La tabla 'preguntas' está vacía en Supabase.");
-        alert("La base de datos está vacía. Asegurate de haber corrido el script SQL con éxito.");
+        console.error("La tabla 'preguntas' está vacía.");
+        alert("La base de datos está vacía.");
         return;
     }
 
-    console.log("Preguntas cargadas con éxito desde la BD:", preguntasObtenidas);
+    console.log("Preguntas cargadas con éxito:", preguntasObtenidas);
 
-    // Mapeamos los datos asegurándonos de que 'opciones' sea tratado correctamente
+    // Mapeamos el array nativo de Postgres adaptándolo a JavaScript
     bancoPreguntas = preguntasObtenidas.map(p => {
-        // Forzamos a que las opciones sean un array válido, por si viene como texto
         let listaOpciones = p.opciones;
         if (typeof p.opciones === 'string') {
             listaOpciones = p.opciones.replace(/{|}/g, '').split(',');
         }
-        
         return {
             q: p.pregunta,
             o: listaOpciones, 
@@ -51,7 +50,7 @@ window.onload = async function() {
         };
     });
 
-    // Habilitamos el botón de comenzar una vez que las preguntas están listas en memoria
+    // Acción del botón comenzar juego
     btnComenzar.onclick = function() {
         const nickInput = inputNick.value.trim();
         if (nickInput === "") {
@@ -60,7 +59,6 @@ window.onload = async function() {
         }
         juego.nick = nickInput;
         
-        // Corrección de seguridad por si el elemento no existe en el HTML anterior
         const userBadge = document.getElementById('usuario-activo');
         if (userBadge) userBadge.innerText = "👤 " + juego.nick;
         
@@ -87,7 +85,6 @@ window.onload = async function() {
         infoPregunta.o.forEach((opcion, index) => {
             const btn = document.createElement('button');
             btn.className = "btn-opcion";
-            // Limpiamos posibles comillas rebeldes que arrastre Postgres
             btn.innerText = opcion.replace(/"/g, '').trim(); 
             btn.onclick = () => procesarRespuesta(index);
             contenedor.appendChild(btn);
@@ -101,9 +98,6 @@ window.onload = async function() {
         juego.preguntaActual++;
         cargarPregunta();
     }
-
-    // NUEVA VARIABLE GLOBAL INTERNA (Solo para manejar las pestañas)
-    let listaRankingsGlobal = []; 
 
     async function finalizarJuego() {
         pJuego.classList.add('oculto');
@@ -130,40 +124,36 @@ window.onload = async function() {
             return;
         }
 
-        // Guardamos los datos en nuestra variable para cambiar de pestaña sin volver a consultar a internet
         listaRankingsGlobal = rankingsDelDia;
 
-        // Configuración de los botones de las pestañas
+        // Configuración de controles para las pestañas de la tabla
         const btnTop3 = document.getElementById('btn-tab-top3');
         const btnGeneral = document.getElementById('btn-tab-general');
 
-        // Acción al hacer clic en Top 3
         btnTop3.onclick = function() {
-            btnTop3.style.backgroundColor = "#1A237E"; // Azul activo
-            btnGeneral.style.backgroundColor = "#757575"; // Gris inactivo
-            dibujarTabla(listaRankingsGlobal.slice(0, 3)); // Cortamos la lista para mostrar solo los primeros 3
+            btnTop3.style.backgroundColor = "#1A237E"; 
+            btnGeneral.style.backgroundColor = "#757575"; 
+            dibujarTabla(listaRankingsGlobal.slice(0, 3)); 
         };
 
-        // Acción al hacer clic en General
         btnGeneral.onclick = function() {
-            btnTop3.style.backgroundColor = "#757575"; // Gris inactivo
-            btnGeneral.style.backgroundColor = "#1A237E"; // Azul activo
-            dibujarTabla(listaRankingsGlobal); // Mostramos la lista completa
+            btnTop3.style.backgroundColor = "#757575"; 
+            btnGeneral.style.backgroundColor = "#1A237E"; 
+            dibujarTabla(listaRankingsGlobal); 
         };
 
-        // Por defecto al terminar el juego, mostramos el Top 3 para arrancar con impacto visual
+        // Activamos la pestaña Top 3 por defecto al entrar
         btnTop3.click();
     }
 
-    // NUEVA FUNCIÓN AUXILIAR: Se encarga de pintar las filas en la pantalla
     function dibujarTabla(datosAFiltrar) {
         const tablaCuerpo = document.getElementById('tabla-cuerpo');
         tablaCuerpo.innerHTML = "";
 
-        datosAFiltrar.forEach((player, index) => {
+        datosAFiltrar.forEach((player) => {
             const fila = document.createElement('tr');
             
-            // Buscamos la posición real del jugador en el ranking general original
+            // Calculamos su posición real basándonos en la lista global completa
             let posicionReal = listaRankingsGlobal.findIndex(p => p.id === player.id) + 1;
 
             if(player.nick === juego.nick && player.puntaje === juego.puntaje) {
@@ -179,3 +169,14 @@ window.onload = async function() {
             tablaCuerpo.appendChild(fila);
         });
     }
+
+    document.getElementById('btn-reiniciar').onclick = function() {
+        juego.preguntaActual = 0;
+        juego.puntaje = 0;
+        pRanking.classList.add('oculto');
+        pInicio.classList.remove('oculto');
+        const userBadge = document.getElementById('usuario-activo');
+        if (userBadge) userBadge.innerText = "";
+        inputNick.value = "";
+    };
+}; // <--- ¡Acá está la llave de cierre que faltaba y rompía todo!
