@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trivia de Cultura General</title>
+    <link rel="stylesheet" href="estilos.css">
+</head>
+<body>
+
+    <header>
+        <h1>Mentes Despiertas</h1>
+        <div id="usuario-activo"></div>
+    </header>
+
+    <div class="container">
+        
+        <section id="pantalla-inicio">
+            <h2>Desafío Diario de Cultura General</h2>
+            <p style="text-align: center; margin-bottom: 1.5rem; color: #666;">Ingresá tu Nickname para empezar.</p>
+            <input type="text" id="input-nick" placeholder="Tu apodo...">
+            <button id="btn-comenzar">Comenzar Desafío</button>
+        </section>
+
+        <section id="pantalla-juego" class="oculto">
+            <div class="progress-container">
+                <span class="progress-text" id="texto-progreso">Pregunta 1 de 10</span>
+                <div class="progress-bar"><div class="progress-fill" id="llenado-progreso"></div></div>
+            </div>
+            <h3 id="texto-pregunta" style="font-size: 1.3rem; margin-bottom: 1rem;">¿Pregunta?</h3>
+            <div class="opciones-grid" id="contenedor-opciones"></div>
+        </section>
+
+        <section id="pantalla-ranking" class="oculto">
+            <h2>Resultados del Día</h2>
+            <p id="resultado-usuario" style="text-align: center; font-size: 1.1rem; margin-bottom: 1.5rem; font-weight: bold;"></p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Puesto</th>
+                        <th>Nick</th>
+                        <th>Puntaje</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-cuerpo"></tbody>
+            </table>
+            <button id="btn-reiniciar" style="margin-top: 1.5rem; background-color: #666;">Volver a Intentar</button>
+        </section>
+
+    </div>
+
+    <footer>
+        <p>Proyecto Cultura General &copy; 2026</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="app-supabase.js"></script>
+</body>
+</html>
