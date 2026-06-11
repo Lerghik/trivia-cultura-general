@@ -3,65 +3,69 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trivia de Cultura General</title>
+    <title>Mentes Despiertas - Trivia</title>
     <link rel="stylesheet" href="estilos.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏆</text></svg>">
 </head>
 <body>
 
     <header>
-        <h1>Mentes Despiertas</h1>
+        <h1 id="logo-titulo" style="cursor: pointer; user-select: none;">Mentes Despiertas</h1>
         <div id="usuario-activo"></div>
     </header>
 
-    <div class="container">
+    <main class="container">
         
         <section id="pantalla-inicio">
-            <h2>Desafío Diario de Cultura General</h2>
-            <p style="text-align: center; margin-bottom: 1.5rem; color: #666;">Ingresá tu Nickname para empezar.</p>
-            <input type="text" id="input-nick" placeholder="Tu apodo...">
-            <button id="btn-comenzar">Comenzar Desafío</button>
+            <h2>¿Qué tan despierta está tu mente?</h2>
+            <p>Ingresá tu Nickname para comenzar el desafío de cultura general.</p>
+            <input type="text" id="input-nick" placeholder="Ej: JuanPerez12">
+            
+            <div style="display: flex; gap: 10px; margin-top: 1.5rem; justify-content: center;">
+                <button id="btn-comenzar">Comenzar Desafío</button>
+                <button id="btn-ver-ranking-inicio" style="background-color: #757575;">Ver Posiciones</button>
+            </div>
         </section>
 
         <section id="pantalla-juego" class="oculto">
-            <div class="progress-container">
-                <span class="progress-text" id="texto-progreso">Pregunta 1 de 10</span>
-                <div class="progress-bar"><div class="progress-fill" id="llenado-progreso"></div></div>
+            <div id="progreso-trivia">
+                <span id="texto-progreso">Pregunta 1 de 10</span>
+                <div id="barra-progreso"><div id="llenado-progreso"></div></div>
             </div>
-            <h3 id="texto-pregunta" style="font-size: 1.3rem; margin-bottom: 1rem;">¿Pregunta?</h3>
-            <div class="opciones-grid" id="contenedor-opciones"></div>
+            <h3 id="texto-pregunta">Cargando pregunta...</h3>
+            <div id="contenedor-opciones" class="opciones-grid"></div>
         </section>
 
-        <section id="pantalla-ranking" class="oculto" class="container">
-    <h2>Tabla de Clasificación</h2>
-    <p id="resultado-usuario"></p>
+        <section id="pantalla-ranking" class="oculto">
+            <h2>¡Desafío Completado!</h2>
+            <p id="resultado-usuario"></p>
+            <button id="btn-reiniciar" style="margin-top: 1rem;">Volver a Intentar</button>
+        </section>
 
-    <div style="display: flex; gap: 10px; margin-bottom: 1.5rem; justify-content: center;">
-        <button id="btn-tab-top3" style="background-color: #1A237E; padding: 0.6rem 1rem; font-size: 0.9rem;">🏆 Top 3</button>
-        <button id="btn-tab-general" style="background-color: #757575; padding: 0.6rem 1rem; font-size: 0.9rem;">📋 General</button>
-    </div>
+        <section id="seccion-tabla-global" class="oculto" style="margin-top: 2rem; border-top: 2px solid #e0e0e0; padding-top: 1.5rem;">
+            <h3 style="text-align: center; margin-bottom: 1rem;">Tabla de Clasificación</h3>
+            
+            <div style="display: flex; gap: 10px; margin-bottom: 1.5rem; justify-content: center;">
+                <button id="btn-tab-top3" style="background-color: #1A237E; padding: 0.6rem 1rem; font-size: 0.9rem;">🏆 Top 3</button>
+                <button id="btn-tab-general" style="background-color: #757575; padding: 0.6rem 1rem; font-size: 0.9rem;">📋 General</button>
+            </div>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Puesto</th>
-                <th>Usuario</th>
-                <th>Puntaje</th>
-            </tr>
-        </thead>
-        <tbody id="tabla-cuerpo">
-            </tbody>
-    </table>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Puesto</th>
+                        <th>Usuario</th>
+                        <th>Puntaje</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-cuerpo">
+                    </tbody>
+            </table>
+        </section>
 
-    <button id="btn-reiniciar" style="margin-top: 2rem;">Volver a Jugar</button>
-</section>
-
-    </div>
-
-    <footer>
-        <p>Proyecto Cultura General &copy; 2026</p>
-    </footer>
+    </main>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="app-supabase.js"></script>
+    <script src="app-supabase.js"></script>
 </body>
 </html>
