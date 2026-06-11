@@ -1,13 +1,13 @@
 // CONFIGURACIÓN DE TU PROYECTO
 const SUPABASE_URL = "https://ebglmoumxipvrtpsgkrw.supabase.co"; 
-const SUPABASE_ANON_KEY = "sb_publishable_rKZ87GIXN8TtKlOsdeYN2g__gocmwd0"; // <--- VOLVÉ A PEGAR ACÁ TU KEY REAL
+const SUPABASE_ANON_KEY = "sb_publishable_rKZ87GIXN8TtKlOsdeYN2g__gocmwd0"; // <--- AGREGÁ TU KEY ACÁ
 
 const miSupabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let bancoPreguntas = []; 
 let juego = { nick: "", preguntaActual: 0, puntaje: 0 };
 let listaRankingsGlobal = []; 
-let yaTerminoElJuego = false; // Candado para bloquear re-juegos
+let yaTerminoElJuego = false; // Candado para bloquear re-juegos legítimos
 
 window.onload = async function() {
     const pInicio = document.getElementById('pantalla-inicio');
@@ -52,7 +52,7 @@ window.onload = async function() {
     // OYENTE: Iniciar el juego
     btnComenzar.onclick = function() {
         if (yaTerminoElJuego) {
-            alert("Ya completaste el desafío en esta sesión. ¡Gracias por participar!");
+            alert("Ya completaste el desafío con éxito en esta sesión. ¡Gracias por participar!");
             return;
         }
 
@@ -105,21 +105,27 @@ window.onload = async function() {
     }
 
     async function finalizarJuego() {
-        yaTerminoElJuego = true; 
+        yaTerminoElJuego = true; // De entrada asumimos que terminó bien
         pJuego.classList.add('oculto');
         pRanking.classList.remove('oculto');
         document.getElementById('resultado-usuario').innerText = `¡Buen trabajo! Sumaste ${juego.puntaje} puntos.`;
 
-        // Intentar guardar puntaje en Supabase
+        // Enviar resultado a Supabase
         const { error: errorInsert } = await miSupabase
             .from('ranking')
             .insert([{ nick: juego.nick, puntaje: juego.puntaje }]);
 
-        // Manejo del Nick Repetido (Regla Unique)
         if (errorInsert) {
             console.error("Error al guardar en ranking:", errorInsert);
+            
+            // CORRECCIÓN AQUÍ: Si el nick es duplicado
             if (errorInsert.code === '23505') {
-                alert(`⚠️ El nick "${juego.nick}" ya está registrado por otro jugador. Tu puntaje actual no se guardará para evitar duplicados.`);
+                alert(`⚠️ El nick "${juego.nick}" ya está registrado por otro jugador. Tu puntaje NO se guardó. Podés volver a intentar cambiando tu Nickname.`);
+                
+                yaTerminoElJuego = false; // Te devolvemos el permiso para jugar
+                inputNick.value = "";     // Te limpiamos el input para comodidad
+                const userBadge = document.getElementById('usuario-activo');
+                if (userBadge) userBadge.innerText = ""; // Limpiamos el badge de arriba
             } else {
                 alert("Hubo un problema al guardar tu puntaje en el servidor.");
             }
@@ -183,6 +189,10 @@ window.onload = async function() {
     }
 
     document.getElementById('btn-reiniciar').onclick = function() {
+        // Al reiniciar preparamos las variables numéricas internas por si puede volver a jugar
+        juego.preguntaActual = 0;
+        juego.puntaje = 0;
+        
         pRanking.classList.add('oculto');
         sTablaGlobal.classList.add('oculto');
         pInicio.classList.remove('oculto');
