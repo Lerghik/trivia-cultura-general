@@ -105,76 +105,30 @@ window.onload = async function() {
     }
 
     async function finalizarJuego() {
-        yaTerminoElJuego = true; // ACTIVAMOS EL BLOQUEO
+        yaTerminoElJuego = true; // Bloqueamos la sesión actual
         pJuego.classList.add('oculto');
-        pRanking.classList.remove('oculto');
-        document.getElementById('resultado-usuario').innerText = `¡Buen trabajo! Sumaste ${juego.puntaje} puntos.`;
+        
+        document.getElementById('resultado-usuario').innerText = `¡Buen trabajo! Sumaste ${juego.puntaje} points.`;
 
-        // Registrar puntaje en Supabase
-        await miSupabase.from('ranking').insert([{ nick: juego.nick, puntaje: juego.puntaje }]);
+        // 2. ENVIAR EL RESULTADO A SUPABASE (Y capturar si hay error de duplicado)
+        const { error: errorInsert } = await miSupabase
+            .from('ranking')
+            .insert([{ nick: juego.nick, puntaje: juego.puntaje }]);
 
-        // Traer y mostrar tabla actualizada automáticamente al final
+        // NUEVO: Validamos si la base de datos rechazó el Nickname por estar repetido
+        if (errorInsert) {
+            console.error("Error al guardar en ranking:", errorInsert);
+            
+            // El código de error '23505' en Postgres significa "Violación de unicidad" (Duplicado)
+            if (errorInsert.code === '23505') {
+                alert(`⚠️ El nick "${juego.nick}" ya está registrado por otro jugador. Tus puntos se mostrarán temporalmente pero no se guardarán con este nombre. ¡Probá con otro apodo la próxima!`);
+            } else {
+                alert("Hubo un problema al guardar tu puntaje en el servidor.");
+            }
+        }
+
+        // 3. TRAER Y MOSTRAR TABLA ACTUALIZADA
         await actualizarDatosRanking();
+        pRanking.classList.remove('oculto');
         sTablaGlobal.classList.remove('oculto');
     }
-
-    // FUNCIÓN CORE: Trae la info de Supabase y configura los clics de las pestañas
-    async function actualizarDatosRanking() {
-        const { data: rankingsDelDia, error: errorRanking } = await miSupabase
-            .from('ranking')
-            .select('*')
-            .order('puntaje', { ascending: false });
-
-        if (errorRanking) return;
-
-        listaRankingsGlobal = rankingsDelDia;
-
-        const btnTop3 = document.getElementById('btn-tab-top3');
-        const btnGeneral = document.getElementById('btn-tab-general');
-
-        btnTop3.onclick = function() {
-            btnTop3.style.backgroundColor = "#1A237E"; 
-            btnGeneral.style.backgroundColor = "#757575"; 
-            dibujarTabla(listaRankingsGlobal.slice(0, 3)); 
-        };
-
-        btnGeneral.onclick = function() {
-            btnTop3.style.backgroundColor = "#757575"; 
-            btnGeneral.style.backgroundColor = "#1A237E"; 
-            dibujarTabla(listaRankingsGlobal); 
-        };
-
-        // Forzamos la vista del Top 3 inicialmente
-        btnTop3.click();
-    }
-
-    function dibujarTabla(datosAFiltrar) {
-        const tablaCuerpo = document.getElementById('tabla-cuerpo');
-        if (!tablaCuerpo) return;
-        tablaCuerpo.innerHTML = "";
-
-        datosAFiltrar.forEach((player) => {
-            const fila = document.createElement('tr');
-            let posicionReal = listaRankingsGlobal.findIndex(p => p.id === player.id) + 1;
-
-            if(player.nick === juego.nick && player.puntaje === juego.puntaje) {
-                fila.className = "mi-puesto";
-            }
-            
-            let medalla = posicionReal;
-            if(posicionReal === 1) medalla = "🥇";
-            if(posicionReal === 2) medalla = "🥈";
-            if(posicionReal === 3) medalla = "🥉";
-
-            fila.innerHTML = `<td>${medalla}</td><td>${player.nick}</td><td>${player.puntaje} pts</td>`;
-            tablaCuerpo.appendChild(fila);
-        });
-    }
-
-    // Acción del botón Volver a intentar (solo limpia interfaz, el candado sigue activo)
-    document.getElementById('btn-reiniciar').onclick = function() {
-        pRanking.classList.add('oculto');
-        sTablaGlobal.classList.add('oculto');
-        pInicio.classList.remove('oculto');
-    };
-};
