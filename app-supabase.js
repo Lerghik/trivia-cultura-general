@@ -1,57 +1,61 @@
 // CONFIGURACIÓN DE TU PROYECTO
 const SUPABASE_URL = "https://ebglmoumxipvrtpsgkrw.supabase.co"; 
-const SUPABASE_ANON_KEY = "sb_publishable_rKZ87GIXN8TtKlOsdeYN2g__gocmwd0"; // <-- PONÉ ACÁ TU KEY REAL ENTRE COMILLAS
+const SUPABASE_ANON_KEY = "TU_API_KEY_ANONIMA_LARGA..."; // <--- PONÉ ACÁ TU KEY REAL EN GITHUB
 
-// Inicializamos la conexión usando 'miSupabase' para evitar choques globales
 const miSupabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let bancoPreguntas = []; 
 let juego = { nick: "", preguntaActual: 0, puntaje: 0 };
-let listaRankingsGlobal = []; // Guarda los puntajes para alternar pestañas al instante
+let listaRankingsGlobal = []; 
+let yaTerminoElJuego = false; // Candado de seguridad para bloquear el juego
 
 window.onload = async function() {
     const pInicio = document.getElementById('pantalla-inicio');
     const pJuego = document.getElementById('pantalla-juego');
     const pRanking = document.getElementById('pantalla-ranking');
+    const sTablaGlobal = document.getElementById('seccion-tabla-global');
+    
     const btnComenzar = document.getElementById('btn-comenzar');
+    const btnVerRankingInicio = document.getElementById('btn-ver-ranking-inicio');
     const inputNick = document.getElementById('input-nick');
+    const logoTitulo = document.getElementById('logo-titulo');
 
-    console.log("Intentando conectar a Supabase para traer preguntas...");
-
-    // 1. TRAEMOS LAS PREGUNTAS DESDE SUPABASE
+    // 1. CARGA INICIAL DE PREGUNTAS
     const { data: preguntasObtenidas, error: errorPreguntas } = await miSupabase
         .from('preguntas')
         .select('*');
 
-    if (errorPreguntas) {
-        console.error("Error crítico al traer preguntas de Supabase:", errorPreguntas);
-        alert("Error de conexión con la base de datos. Revisá las claves de Supabase.");
-        return;
+    if (!errorPreguntas && preguntasObtenidas) {
+        bancoPreguntas = preguntasObtenidas.map(p => {
+            let listaOpciones = p.opciones;
+            if (typeof p.opciones === 'string') {
+                listaOpciones = p.opciones.replace(/{|}/g, '').split(',');
+            }
+            return { q: p.pregunta, o: listaOpciones, a: parseInt(p.correcta) };
+        });
     }
 
-    if (!preguntasObtenidas || preguntasObtenidas.length === 0) {
-        console.error("La tabla 'preguntas' está vacía.");
-        alert("La base de datos está vacía.");
-        return;
-    }
+    // OYENTE: Click en el título principal "Mentes Despiertas"
+    logoTitulo.onclick = function() {
+        pJuego.classList.add('oculto');
+        pRanking.classList.add('oculto');
+        sTablaGlobal.classList.add('oculto');
+        pInicio.classList.remove('oculto');
+    };
 
-    console.log("Preguntas cargadas con éxito:", preguntasObtenidas);
+    // OYENTE: Botón "Ver Posiciones" desde la pantalla de inicio
+    btnVerRankingInicio.onclick = async function() {
+        await actualizarDatosRanking();
+        sTablaGlobal.classList.remove('oculto');
+    };
 
-    // Mapeamos el array nativo de Postgres adaptándolo a JavaScript
-    bancoPreguntas = preguntasObtenidas.map(p => {
-        let listaOpciones = p.opciones;
-        if (typeof p.opciones === 'string') {
-            listaOpciones = p.opciones.replace(/{|}/g, '').split(',');
-        }
-        return {
-            q: p.pregunta,
-            o: listaOpciones, 
-            a: parseInt(p.correcta)
-        };
-    });
-
-    // Acción del botón comenzar juego
+    // OYENTE: Botón Comenzar Desafío
     btnComenzar.onclick = function() {
+        if (yaTerminoElJuego) {
+            alert("Ya completaste el desafío en esta sesión. ¡Gracias por participar!");
+            return;
+        }
+
         const nickInput = inputNick.value.trim();
         if (nickInput === "") {
             alert("Por favor, ingresá un Nickname.");
@@ -63,6 +67,7 @@ window.onload = async function() {
         if (userBadge) userBadge.innerText = "👤 " + juego.nick;
         
         pInicio.classList.add('oculto');
+        sTablaGlobal.classList.add('oculto'); // Ocultamos la tabla si estaba abierta
         pJuego.classList.remove('oculto');
         cargarPregunta();
     };
@@ -100,66 +105,56 @@ window.onload = async function() {
     }
 
     async function finalizarJuego() {
+        yaTerminoElJuego = true; // ACTIVAMOS EL BLOQUEO
         pJuego.classList.add('oculto');
         pRanking.classList.remove('oculto');
         document.getElementById('resultado-usuario').innerText = `¡Buen trabajo! Sumaste ${juego.puntaje} puntos.`;
 
-        // 2. ENVIAR EL RESULTADO DEL USUARIO A SUPABASE
-        const { error: errorInsert } = await miSupabase
-            .from('ranking')
-            .insert([{ nick: juego.nick, puntaje: juego.puntaje }]);
+        // Registrar puntaje en Supabase
+        await miSupabase.from('ranking').insert([{ nick: juego.nick, puntaje: juego.puntaje }]);
 
-        if (errorInsert) {
-            console.error("Error al guardar puntaje en ranking:", errorInsert);
-        }
+        // Traer y mostrar tabla actualizada automáticamente al final
+        await actualizarDatosRanking();
+        sTablaGlobal.classList.remove('oculto');
+    }
 
-        // 3. TRAER EL RANKING COMPLETO DESDE SUPABASE
+    // FUNCIÓN CORE: Trae la info de Supabase y configura los clics de las pestañas
+    async function actualizarDatosRanking() {
         const { data: rankingsDelDia, error: errorRanking } = await miSupabase
             .from('ranking')
             .select('*')
             .order('puntaje', { ascending: false });
 
-        if (errorRanking) {
-            console.error("Error al obtener el ranking:", errorRanking);
-            return;
-        }
+        if (errorRanking) return;
 
         listaRankingsGlobal = rankingsDelDia;
 
-        // Configuración de controles para las pestañas de la tabla
         const btnTop3 = document.getElementById('btn-tab-top3');
         const btnGeneral = document.getElementById('btn-tab-general');
 
-        if (btnTop3 && btnGeneral) {
-            btnTop3.onclick = function() {
-                btnTop3.style.backgroundColor = "#1A237E"; 
-                btnGeneral.style.backgroundColor = "#757575"; 
-                dibujarTabla(listaRankingsGlobal.slice(0, 3)); 
-            };
+        btnTop3.onclick = function() {
+            btnTop3.style.backgroundColor = "#1A237E"; 
+            btnGeneral.style.backgroundColor = "#757575"; 
+            dibujarTabla(listaRankingsGlobal.slice(0, 3)); 
+        };
 
-            btnGeneral.onclick = function() {
-                btnTop3.style.backgroundColor = "#757575"; 
-                btnGeneral.style.backgroundColor = "#1A237E"; 
-                dibujarTabla(listaRankingsGlobal); 
-            };
+        btnGeneral.onclick = function() {
+            btnTop3.style.backgroundColor = "#757575"; 
+            btnGeneral.style.backgroundColor = "#1A237E"; 
+            dibujarTabla(listaRankingsGlobal); 
+        };
 
-            // Activamos la pestaña Top 3 por defecto al entrar
-            btnTop3.click();
-        } else {
-            // Si por alguna razón no encuentra las pestañas, dibuja el ranking completo directo
-            dibujarTabla(listaRankingsGlobal);
-        }
+        // Forzamos la vista del Top 3 inicialmente
+        btnTop3.click();
     }
 
     function dibujarTabla(datosAFiltrar) {
         const tablaCuerpo = document.getElementById('tabla-cuerpo');
         if (!tablaCuerpo) return;
-        
         tablaCuerpo.innerHTML = "";
 
         datosAFiltrar.forEach((player) => {
             const fila = document.createElement('tr');
-            
             let posicionReal = listaRankingsGlobal.findIndex(p => p.id === player.id) + 1;
 
             if(player.nick === juego.nick && player.puntaje === juego.puntaje) {
@@ -176,13 +171,10 @@ window.onload = async function() {
         });
     }
 
+    // Acción del botón Volver a intentar (solo limpia interfaz, el candado sigue activo)
     document.getElementById('btn-reiniciar').onclick = function() {
-        juego.preguntaActual = 0;
-        juego.puntaje = 0;
         pRanking.classList.add('oculto');
+        sTablaGlobal.classList.add('oculto');
         pInicio.classList.remove('oculto');
-        const userBadge = document.getElementById('usuario-activo');
-        if (userBadge) userBadge.innerText = "";
-        inputNick.value = "";
     };
 };
