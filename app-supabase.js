@@ -1,6 +1,6 @@
 // CONFIGURACIÓN DE TU PROYECTO
 const SUPABASE_URL = "https://ebglmoumxipvrtpsgkrw.supabase.co"; 
-const SUPABASE_ANON_KEY = "TU_API_KEY_ANONIMA_LARGA..."; // <--- VOLVÉ A PEGAR ACÁ TU KEY REAL
+const SUPABASE_ANON_KEY = "sb_publishable_rKZ87GIXN8TtKlOsdeYN2g__gocmwd0"; // <--- VOLVÉ A PEGAR ACÁ TU KEY REAL
 
 const miSupabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
