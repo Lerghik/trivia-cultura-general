@@ -8,7 +8,7 @@
 const SUPABASE_URL = "https://ebglmoumxipvrtpsgkrw.supabase.co"; 
 
 // Clave pública de acceso para que la web pueda comunicarse de forma segura con la base de datos
-const SUPABASE_ANON_KEY = "TU_API_KEY_ANONIMA_LARGA..."; // <--- RECUERDEN PEGAR ACÁ SU KEY REAL DE SUPABASE
+const SUPABASE_ANON_KEY = "sb_publishable_rKZ87GIXN8TtKlOsdeYN2g__gocmwd0"; // <--- RECUERDEN PEGAR ACÁ SU KEY REAL DE SUPABASE
 
 // Inicializamos el cliente oficial de Supabase guardándolo en la variable 'miSupabase'
 const miSupabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
