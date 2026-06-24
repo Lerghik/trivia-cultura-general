@@ -127,4 +127,63 @@ button:active {
 }
 
 .btn-opcion:hover {
-    background-color: #e2
+    background-color: #e2e6ea;
+    color: #000000;
+}
+
+/* ====================================================================
+   BARRA DE PROGRESO
+   ==================================================================== */
+#progreso-trivia {
+    margin-bottom: 1.5rem;
+}
+
+#texto-progreso {
+    font-size: 0.85rem;
+    color: #888888;
+    font-weight: 600;
+}
+
+#barra-progreso {
+    width: 100%;
+    height: 8px;
+    background-color: #e0e0e0; /* Fondo gris de la barra vacía */
+    border-radius: 4px;
+    margin-top: 5px;
+    overflow: hidden; /* Corta el llenado interno para que respete los bordes redondeados */
+}
+
+#llenado-progreso {
+    width: 0%; /* Arranca en cero; se estira mediante JavaScript modificando este valor */
+    height: 100%;
+    background-color: #1A237E; /* Color azul del progreso */
+    transition: width 0.3s ease; /* Hace que el avance de la barra sea fluido y no de golpe */
+}
+
+/* ====================================================================
+   DISEÑO DE LA TABLA DE POSICIONES (Ranking)
+   ==================================================================== */
+table {
+    width: 100%;
+    border-collapse: collapse; /* Une las líneas de los bordes para que se vea compacta */
+    margin-top: 1rem;
+}
+
+th, td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0; /* Línea divisoria fina entre filas */
+}
+
+th {
+    background-color: #f8f9fa;
+    color: #555555;
+    font-weight: 600;
+}
+
+/* Clase especial: JavaScript se la pone a la fila del usuario actual para resaltarlo en verde */
+.mi-puesto {
+    background-color: #E8F5E9 !important; /* Fondo verde claro suave */
+    font-weight: bold;
+    color: #2E7D32;                     /* Texto verde oscuro */
+}
