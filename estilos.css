@@ -10,7 +10,7 @@
 
 body {
     background-color: #f4f6f9; /* Color gris muy claro de fondo para descansar la vista */
-    color: #333333;           /* Color gris oscuro para el texto general (mejor contraste que el negro puro) */
+    color: #333333;           /* Color gris oscuro para el texto general (mejor contraste) */
     display: flex;
     flex-direction: column;
     min-height: 100vh;        /* Obliga al body a ocupar el 100% del alto de la pantalla */

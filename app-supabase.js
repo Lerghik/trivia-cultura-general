@@ -8,7 +8,7 @@
 const SUPABASE_URL = "https://ebglmoumxipvrtpsgkrw.supabase.co"; 
 
 // Clave pública de acceso para que la web pueda comunicarse de forma segura con la base de datos
-const SUPABASE_ANON_KEY = "TU_API_KEY_ANONIMA_LARGA..."; 
+const SUPABASE_ANON_KEY = "TU_API_KEY_ANONIMA_LARGA..."; // <--- RECUERDEN PEGAR ACÁ SU KEY REAL DE SUPABASE
 
 // Inicializamos el cliente oficial de Supabase guardándolo en la variable 'miSupabase'
 const miSupabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -266,33 +266,4 @@ window.onload = async function() {
             // Calculamos su puesto matemático real buscando su ID adentro de la lista global original
             let posicionReal = listaRankingsGlobal.findIndex(p => p.id === player.id) + 1;
 
-            // Si la fila que estamos dibujando coincide con la del usuario que acaba de jugar, le ponemos una clase CSS especial para destacarlo
-            if(player.nick === juego.nick && player.puntaje === juego.puntaje) {
-                fila.className = "mi-puesto";
-            }
-            
-            // Convertimos los números de los tres primeros puestos en divertidos emojis de medallas
-            let medalla = posicionReal;
-            if(posicionReal === 1) medalla = "🥇";
-            if(posicionReal === 2) medalla = "🥈";
-            if(posicionReal === 3) medalla = "🥉";
-
-            // Inyectamos las celdas <td> con la información correspondiente
-            fila.innerHTML = `<td>${medalla}</td><td>${player.nick}</td><td>${player.puntaje} pts</td>`;
-            
-            tablaCuerpo.appendChild(fila); // Metemos la fila armada dentro del cuerpo de la tabla
-        });
-    }
-
-    // Evento: Clic en el botón "Volver a Intentar" de la pantalla final
-    document.getElementById('btn-reiniciar').onclick = function() {
-        // Reseteamos las variables numéricas internas para que si vuelve a jugar arranque de cero
-        juego.preguntaActual = 0;
-        juego.puntaje = 0;
-        
-        // Cambiamos los estados visuales para regresar a la pantalla de bienvenida
-        pRanking.classList.add('oculto');
-        sTablaGlobal.classList.add('oculto');
-        pInicio.classList.remove('oculto');
-    };
-}; // Fin del window.onload. ¡Todo cerrado perfectamente!
+            // Si la fila que estamos
