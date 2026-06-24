@@ -1,144 +1,130 @@
+/* ====================================================================
+   ESTILOS GENERALES Y RESETEO de la página
+   ==================================================================== */
 * {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+    box-sizing: border-box; /* Asegura que los tamaños de las cajas incluyan los bordes y paddings */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Tipografía limpia y moderna */
 }
 
 body {
-    background-color: #F5F5F7;
-    color: #333;
+    background-color: #f4f6f9; /* Color gris muy claro de fondo para descansar la vista */
+    color: #333333;           /* Color gris oscuro para el texto general (mejor contraste que el negro puro) */
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
+    min-height: 100vh;        /* Obliga al body a ocupar el 100% del alto de la pantalla */
 }
 
+/* ====================================================================
+   DISEÑO DE LA CABECERA (Header)
+   ==================================================================== */
 header {
-    background-color: #1A237E; /* Azul Profundo */
-    color: white;
+    background-color: #1A237E; /* Azul marino institucional */
+    color: #ffffff;           /* Letras blancas */
     padding: 1rem 2rem;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between; /* Separa el título a la izquierda y el usuario a la derecha */
     align-items: center;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Sombra sutil abajo del header para darle profundidad */
 }
 
-header h1 { 
-    font-size: 1.5rem; 
+#usuario-activo {
+    font-weight: 600;
+    background-color: rgba(255, 255, 255, 0.2); /* Fondo blanco semitransparente tipo cápsula */
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
 }
 
+/* ====================================================================
+   CONTENEDOR PRINCIPAL (Estructura de las pantallas)
+   ==================================================================== */
 .container {
-    flex: 1;
-    max-width: 600px;
-    width: 100%;
-    margin: 2rem auto;
+    max-width: 600px;         /* Ancho máximo de la trivia para que no se desarme en monitores grandes */
+    width: 90%;               /* En pantallas chicas ocupa el 90% del ancho del celular */
+    margin: 2rem auto;        /* Centra la caja horizontalmente en la pantalla */
+    background: #ffffff;      /* Fondo blanco para las tarjetas */
     padding: 2rem;
-    background: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    border-radius: 12px;       /* Bordes redondeados modernos */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05); /* Sombra suave alrededor de la tarjeta */
 }
 
-.oculto { 
+/* Regla crítica: Oculta cualquier sección que tenga esta clase aplicada por JavaScript */
+.oculto {
     display: none !important; 
 }
 
 h2 {
+    margin-bottom: 1rem;
     color: #1A237E;
-    margin-bottom: 1.5rem;
     text-align: center;
 }
 
+p {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #666666;
+}
+
+/* ====================================================================
+   FORMULARIOS Y CASILLAS DE TEXTO
+   ==================================================================== */
 input[type="text"] {
     width: 100%;
     padding: 0.8rem;
-    margin-bottom: 1.5rem;
-    border: 2px solid #E0E0E0;
+    border: 2px solid #cccccc;
     border-radius: 8px;
     font-size: 1rem;
+    margin-bottom: 1rem;
+    outline: none;
+    transition: border-color 0.3s; /* Animación suave al hacer clic */
 }
 
+input[type="text"]:focus {
+    border-color: #1A237E; /* El borde se pinta de azul cuando el usuario va a escribir */
+}
+
+/* ====================================================================
+   ESTILOS DE BOTONES
+   ==================================================================== */
 button {
     background-color: #1A237E;
     color: white;
     border: none;
-    padding: 1rem;
-    border-radius: 8px;
+    padding: 0.8rem 1.5rem;
     font-size: 1rem;
-    font-weight: bold;
+    font-weight: 600;
+    border-radius: 8px;
     cursor: pointer;
-    width: 100%;
+    transition: background-color 0.2s, transform 0.1s; /* Efectos visuales de velocidad */
 }
 
-button:hover { 
-    background-color: #0D1440; 
+button:hover {
+    background-color: #0D145A; /* Se oscurece el azul cuando pasás el mouse por encima */
 }
 
-.progress-container { 
-    margin-bottom: 1.5rem; 
+button:active {
+    transform: scale(0.98); /* Simula un efecto de hundimiento físico al hacer clic */
 }
 
-.progress-text { 
-    font-size: 0.9rem; 
-    color: #666; 
-    margin-bottom: 0.5rem; 
-    display: block; 
-}
-
-.progress-bar { 
-    background: #E0E0E0; 
-    height: 8px; 
-    border-radius: 4px; 
-    overflow: hidden; 
-}
-
-.progress-fill { 
-    background: #FFD700; /* Amarillo Oro */
-    height: 100%; 
-    width: 0%; 
-    transition: width 0.3s; 
-}
-
+/* ====================================================================
+   INTERFAZ DE LA TRIVIA (Preguntas y Opciones)
+   ==================================================================== */
 .opciones-grid {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px; /* Separación uniforme entre cada botón de respuesta */
     margin-top: 1.5rem;
 }
 
+/* Botones específicos de las respuestas de la trivia */
 .btn-opcion {
-    background-color: #F5F5F7;
-    color: #333;
-    border: 2px solid #E0E0E0;
-    text-align: left;
+    background-color: #f0f2f5;
+    color: #333333;
+    text-align: left; /* Alinea el texto de la respuesta a la izquierda */
     padding: 1rem;
+    border: 1px solid #e0e0e0;
 }
 
 .btn-opcion:hover {
-    background-color: #E8EAF6;
-    border-color: #1A237E;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 1rem;
-}
-
-th, td {
-    padding: 0.8rem;
-    text-align: left;
-    border-bottom: 1px solid #E0E0E0;
-}
-
-.mi-puesto {
-    background-color: #FFF9C4; /* Resaltado del usuario */
-    font-weight: bold;
-}
-
-footer {
-    background-color: #1A237E;
-    color: white;
-    text-align: center;
-    padding: 1rem;
-    font-size: 0.85rem;
-}
+    background-color: #e2

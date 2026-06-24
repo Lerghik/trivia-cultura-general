@@ -2,15 +2,20 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     <title>Mentes Despiertas - Trivia</title>
+    
     <link rel="stylesheet" href="estilos.css">
+    
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏆</text></svg>">
 </head>
 <body>
 
     <header>
         <h1 id="logo-titulo" style="cursor: pointer; user-select: none;">Mentes Despiertas</h1>
+        
         <div id="usuario-activo"></div>
     </header>
 
@@ -19,6 +24,7 @@
         <section id="pantalla-inicio">
             <h2>¿Qué tan despierta está tu mente?</h2>
             <p>Ingresá tu Nickname para comenzar el desafío de cultura general.</p>
+            
             <input type="text" id="input-nick" placeholder="Ej: JuanPerez12">
             
             <div style="display: flex; gap: 10px; margin-top: 1.5rem; justify-content: center;">
@@ -30,9 +36,13 @@
         <section id="pantalla-juego" class="oculto">
             <div id="progreso-trivia">
                 <span id="texto-progreso">Pregunta 1 de 10</span>
-                <div id="barra-progreso"><div id="llenado-progreso"></div></div>
+                <div id="barra-progreso">
+                    <div id="llenado-progreso"></div>
+                </div>
             </div>
+            
             <h3 id="texto-pregunta">Cargando pregunta...</h3>
+            
             <div id="contenedor-opciones" class="opciones-grid"></div>
         </section>
 
@@ -58,14 +68,14 @@
                         <th>Puntaje</th>
                     </tr>
                 </thead>
-                <tbody id="tabla-cuerpo">
-                    </tbody>
+                <tbody id="tabla-cuerpo"></tbody>
             </table>
         </section>
 
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <script src="app-supabase.js"></script>
 </body>
 </html>
