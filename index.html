@@ -125,10 +125,30 @@
 
     </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <!-- Importa la librería de Supabase desde CDN para gestionar base de datos y autenticación -->
-    
-    <script src="app-supabase.js"></script>
-    <!-- Vincula el archivo JavaScript principal que contiene la lógica de la aplicación -->
+    <script>
+        // 1. Comprobamos si el navegador tiene acceso a internet en este milisegundo
+        if (navigator.onLine) {
+            console.log("🌐 Internet detectado. Cargando el sistema online (Supabase)...");
+            
+            // Creamos la etiqueta de Supabase de forma dinámica
+            const scriptSupabase = document.createElement('script');
+            scriptSupabase.src = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
+            document.body.appendChild(scriptSupabase);
+
+            // Esperamos un instante a que cargue la librería antes de arrancar tu lógica online
+            scriptSupabase.onload = function() {
+                const scriptApp = document.createElement('script');
+                scriptApp.src = "app-supabase.js";
+                document.body.appendChild(scriptApp);
+            };
+        } else {
+            console.warn("🔌 Sin internet. Cargando la versión offline de emergencia...");
+            
+            // Si no hay internet, ignoramos Supabase por completo e inyectamos directo el offline
+            const scriptOffline = document.createElement('script');
+            scriptOffline.src = "app-offline.js";
+            document.body.appendChild(scriptOffline);
+        }
+    </script>
 </body>
 </html>
