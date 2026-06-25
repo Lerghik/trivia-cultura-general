@@ -126,28 +126,35 @@
     </main>
 
     <script>
-        // 1. Comprobamos si el navegador tiene acceso a internet en este milisegundo
-        if (navigator.onLine) {
-            console.log("🌐 Internet detectado. Cargando el sistema online (Supabase)...");
-            
-            // Creamos la etiqueta de Supabase de forma dinámica
-            const scriptSupabase = document.createElement('script');
-            scriptSupabase.src = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
-            document.body.appendChild(scriptSupabase);
+        // Función interna para inyectar un script de forma segura en la página
+        function cargarScript(ruta) {
+            const script = document.createElement('script');
+            script.src = ruta;
+            document.body.appendChild(script);
+            return script;
+        }
 
-            // Esperamos un instante a que cargue la librería antes de arrancar tu lógica online
+        // Comprobación inicial del estado del navegador
+        if (navigator.onLine) {
+            console.log("🌐 Intentando cargar sistema online...");
+            
+            const scriptSupabase = cargarScript("https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2");
+            
+            // Si la librería carga con éxito, disparamos tu app original
             scriptSupabase.onload = function() {
-                const scriptApp = document.createElement('script');
-                scriptApp.src = "app-supabase.js";
-                document.body.appendChild(scriptApp);
+                console.log("✅ Supabase conectado con éxito. Cargando app-supabase.js");
+                cargarScript("app-supabase.js");
+            };
+
+            // ¡ESTO ES LO QUE FALTA! Si la red se cae a mitad de camino y Supabase da error:
+            scriptSupabase.onerror = function() {
+                console.warn("❌ Error de red al traer Supabase. Activando Plan B Offline...");
+                cargarScript("app-offline.js");
             };
         } else {
-            console.warn("🔌 Sin internet. Cargando la versión offline de emergencia...");
-            
-            // Si no hay internet, ignoramos Supabase por completo e inyectamos directo el offline
-            const scriptOffline = document.createElement('script');
-            scriptOffline.src = "app-offline.js";
-            document.body.appendChild(scriptOffline);
+            // Si directamente el navegador ya sabe que no hay red desde el principio
+            console.warn("🔌 Navegador offline. Cargando app-offline.js directamente...");
+            cargarScript("app-offline.js");
         }
     </script>
 </body>
