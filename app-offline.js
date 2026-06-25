@@ -8,21 +8,55 @@ console.warn("⚠️ ALERTA: La aplicación está corriendo en MODO OFFLINE (Sim
 
 // Variables de almacenamiento en memoria que controlarán el flujo dinámico de la partida
 let bancoPreguntas = [
-    // 💡 ACÁ PUEDEN PEGAR SUS PREGUNTAS REALES PARA QUE EL JUEGO TENGA SENTIDO EN LA PRESENTACIÓN
-    { 
-        q: "¿Cuál es el lugar más frío de la Tierra?", 
-        o: ["La Antártida", "Siberia", "El Polo Norte", "Groenlandia"], 
-        a: 0 // 'La Antártida' está en el índice 0
+    {
+        q: "¿Cuál es el río más largo del mundo?",
+        o: ["Nilo", "Amazonas", "Misisipi", "Danubio"],
+        a: 1
     },
-    { 
-        q: "¿Quién pintó la Mona Lisa?", 
-        o: ["Vincent van Gogh", "Leonardo da Vinci", "Pablo Picasso", "Michelangelo"], 
-        a: 1 // 'Leonardo da Vinci' está en el índice 1
+    {
+        q: "¿En qué año cayó el Muro de Berlín?",
+        o: ["1985", "1989", "1991", "1993"],
+        a: 1
     },
-    { 
-        q: "¿Cuántos planetas tiene nuestro sistema solar?", 
-        o: ["7 planetas", "9 planetas", "8 planetas", "6 planetas"], 
-        a: 2 // '8 planetas' está en el índice 2
+    {
+        q: "¿Qué gas absorben las plantas para realizar la fotosíntesis?",
+        o: ["Oxígeno", "Dióxido de Carbono", "Nitrógeno", "Hidrógeno"],
+        a: 1
+    },
+    {
+        q: "¿Quién escribió 'Cien años de soledad'?",
+        o: ["Jorge Luis Borges", "Julio Cortázar", "Gabriel García Márquez", "Mario Vargas Llosa"],
+        a: 2
+    },
+    {
+        q: "¿Cuál es el planeta más grande del sistema solar?",
+        o: ["Saturno", "Tierra", "Júpiter", "Neptuno"],
+        a: 2
+    },
+    {
+        q: "¿Qué país regaló la Estatua de la Libertad a Estados Unidos?",
+        o: ["Francia", "Reino Unido", "Alemania", "España"],
+        a: 0
+    },
+    {
+        q: "¿Cuál es el órgano más grande del cuerpo humano?",
+        o: ["El hígado", "El corazón", "La piel", "Los pulmones"],
+        a: 2
+    },
+    {
+        q: "¿Qué elemento de la tabla periódica tiene el símbolo 'Au'?",
+        o: ["Plata", "Oro", "Cobre", "Aluminio"],
+        a: 1
+    },
+    {
+        q: "¿En qué continente se encuentra el Desierto del Sahara?",
+        o: ["Asia", "América", "África", "Oceanía"],
+        a: 2
+    },
+    {
+        q: "¿Cuál es la capital de Japón?",
+        o: ["Kioto", "Osaka", "Seúl", "Tokio"],
+        a: 3
     }
 ];
 
