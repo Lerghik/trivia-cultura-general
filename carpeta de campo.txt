@@ -1,0 +1,95 @@
+¡Qué gran proyecto para presentar en una Feria de Ciencias! Plantear la brecha entre la teoría pedagógica y la práctica real mediante una aplicación de trivia híbrida (con tolerancia a fallos y sincronización asíncrona) es una temática excelente, muy ligada a la informática y a la experiencia de usuario (UX).
+
+A continuación, te organizo la **Estructura Completa de la Carpeta de Campo** y el **Informe Científico**. Al final te sumo sugerencias clave para "emprolijar" y que el jurado quede deslumbrado.
+
+---
+
+# PARTÉ 1: REGISTRO DIARIO (Carpeta de Campo)
+
+*La carpeta de campo es el "diario de viaje" del proyecto. Debe escribirse de forma cronológica, reflejando tanto los éxitos como las frustraciones (¡como las peleas con los comentarios del código!).*
+
+### Día 1: Planteamiento del problema y Arquitectura Inicial
+
+* **Nota del día:** Nos reunimos para debatir sobre la brecha entre lo que se enseña teóricamente y lo que pasa en la práctica dentro del aula (por ejemplo, cuando cae la conectividad de la escuela). Decidimos crear una aplicación web de trivia educativa utilizando HTML y CSS. Armamos la estructura de la sección principal.
+* **Gráfico/Esquema:** Diagrama de bloques inicial en papel mostrando tres pantallas independientes: Inicio, Juego y Ranking Global.
+* **Estadísticas:** El banco de preguntas se define con 10 desafíos fijos de cultura general. Puntuación estandarizada: 10 puntos por acierto, 0 por error.
+* **Fotografía (Captura asociada):** `{373FD6D8-9FCE-4F6B-8FA2-2F3A85ED6432}.png` - Estructura semántica inicial del archivo `index.html` con la maquetación limpia de la pantalla de resultados finales y sus comentarios de accesibilidad.
+
+### Día 2: Desarrollo del Estilo Visual y Componentes UX
+
+* **Nota del día:** Implementamos la hoja de estilos (`estilos.css`) para darle identidad visual a la trivia. Nos enfocamos en crear un componente pedagógico interactivo para que el alumno revise en qué falló, distinguiendo aciertos de errores mediante colores normalizados (verde para éxito, rojo para fallo).
+* **Estadísticas del componente:** Layout optimizado con un ancho máximo (`max-width: 500px`) y un límite de altura de caja (`max-height: 300px`) con scroll interno automático para no saturar la pantalla.
+* **Fotografía (Captura asociada):** Bloque completo de CSS de la clase `.revision-contenedor` y sus modificadores de estado `.revision-correcto` (color hex `#28a745`) y `.revision-incorrecto` (color hex `#dc3545`).
+
+### Día 3: El Desafío de la Realidad y la Lógica Offline
+
+* **Nota del día:** Al simular el uso en el aula real, notamos que internet suele cortarse. El código online clásico se rompe si no hay conexión. Desarrollamos `app-offline.js` para capturar el flujo de datos localmente. Incorporamos las variables globales `juego`, `bancoPreguntas` y la persistencia física de datos a través de la API `localStorage`.
+* **Gráfico:** Diagrama de flujo de datos del objeto `juego` (`nick`, `preguntaActual`, `puntaje`).
+* **Fotografía (Captura asociada):** `{831FCC0B-E521-4D88-94E6-A7040CE14A41}.png` - Implementación de la función `guardarPartidaOffline(juego.nick, juego.puntaje)` para resguardar los datos de los alumnos de manera local ante la ausencia de red.
+
+### Día 4: Control de Versiones y Gestión del Repositorio
+
+* **Nota del día:** Tuvimos problemas de formateo en el código que borraban los comentarios esenciales. Aprendimos a utilizar Git de forma local para inspeccionar cambios línea por línea y descubrimos cómo descartar modificaciones no deseadas o resguardarlas en un commit antes de subirlas a la nube (GitHub).
+* **Fotografía (Captura asociada):** `{DFDF2AB9-31BC-4C58-843A-84054C55F1B6}.png` - Interfaz del panel de control de cambios de Source Control en Visual Studio Code mostrando los tres archivos clave modificados (`app-offline.js`, `estilos.css`, e `index.html`).
+
+---
+
+# PARTE 2: INFORME CIENTÍFICO
+
+### 1. Carátula
+
+* **Título del Proyecto:** *La brecha digital en el aula: Desarrollo de software educativo resiliente ante la desconexión.*
+* **Área:** Ciencias de la Computación / Tecnología Educativa.
+* **Autores:** [Tus Nombres]
+* **Asesor/Profesor:** [Nombre del Profesor]
+* **Institución y Año:** [Tu Escuela], 2026.
+
+### 2. Índice
+
+*(Tabla numérica clásica que conecta los títulos con sus respectivas páginas finales).*
+
+### 3. Resumen
+
+Este proyecto aborda la desconexión digital en instituciones escolares mediante el desarrollo de una aplicación web de trivia interactiva con arquitectura *offline-first*. Ante la problemática frecuente de la intermitencia de red, se diseñó un software dinámico en HTML, CSS y JavaScript capaz de retener de forma segura los puntajes de los participantes en la memoria local (`localStorage`), implementando un escuchador automático en segundo plano que migra los datos hacia una base de datos en la nube (Supabase) de forma masiva en el instante preciso en que se recupera la conectividad.
+
+### 4. Introducción
+
+En entornos pedagógicos ideales, las aplicaciones educativas dependen de internet constante. Sin embargo, en la práctica cotidiana escolar, los servidores y las señales de Wi-Fi sufren caídas frecuentes. Cuando un software educativo común pierde conectividad a mitad de una actividad, los datos del progreso del alumno se destruyen, generando frustración. Este proyecto expone cómo las metodologías de desarrollo de software modernas pueden mitigar las deficiencias de infraestructura física mediante código inteligente.
+
+### 5. Hipótesis
+
+*"Es posible garantizar la continuidad pedagógica y el registro íntegro de calificaciones en una aplicación digital escolar ante cortes imprevistos de internet mediante una arquitectura de sincronización diferida controlada por hardware de red."*
+
+### 6. Objetivos
+
+* **Objetivo General:** Desarrollar una aplicación de trivia educativa híbrida tolerante a fallos de red.
+* **Objetivos Específicos:**
+1. Estructurar una interfaz semántica en HTML y CSS que proporcione feedback visual pedagógico a los alumnos.
+2. Implementar persistencia local temporal para almacenar participantes sin sobrescribir registros previos.
+3. Programar un módulo de sincronización asíncrona automática (`Bulk Insert`) conectado a la API de Supabase.
+
+
+
+### 7. Metodología
+
+Se utilizó un diseño metodológico experimental basado en desarrollo ágil.
+
+1. **Fase de maquetación:** Creación de pantallas SPA (*Single Page Application*) controladas mediante clases CSS de visibilidad (`.oculto`).
+2. **Fase lógica local:** Programación en JavaScript de estructuras de objetos mutables para retener los estados de juego de cada alumno.
+3. **Fase de resiliencia:** Diseño del "guardián de red" mediante el evento global `window.addEventListener('online')` para automatizar la migración diferida de arrays de objetos JSON almacenados localmente.
+
+### 8. Resultados
+
+El software fue sometido a pruebas de estrés simulando la desconexión de red. Al apagar el adaptador de Wi-Fi, la aplicación continuó operativa: los alumnos jugaron, recibieron su desglose de respuestas correctas/incorrectas y el sistema almacenó con éxito las puntuaciones en el búfer local. Al restablecer la red, el navegador disparó el evento en un segundo plano, inyectando de forma limpia las filas pendientes en la base de datos centralizada de Supabase sin duplicaciones y liberando la memoria del dispositivo.
+
+### 9. Conclusiones
+
+Se validó la hipótesis inicial de forma concluyente. La práctica tecnológica en las escuelas no tiene por qué verse limitada por las carencias de su conectividad. Aplicar un enfoque arquitectónico centrado en la tolerancia a fallos permite que el software absorba el problema físico de la red, demostrando que un diseño de código robusto es la solución más eficiente para cerrar la brecha entre el aula teórica y la realidad del aula práctica.
+
+---
+
+# 💡 Sugerencias del Desarrollador Experto para tu stand:
+
+1. **Llevá un "Botón de Corte" físico:** Si usás una notebook para mostrar el proyecto al jurado, configurala para compartir internet desde tu celular. Cuando el jurado se acerque, deciles: *"Miren esto, estamos jugando online"* y **desconectá el Wi-Fi en vivo**. Hacé que jueguen offline, mostrales cómo se guardó en la compu y luego reconectá el Wi-Fi para que vean cómo impacta mágicamente en la base de datos de Supabase. Esa demostración práctica te asegura un puntaje altísimo.
+2. **Agregá una sección de "Lecciones Aprendidas" en la carpeta:** Mencioná el proceso de documentar el código. Explicá que al principio subestimaron el valor de los comentarios línea por línea, pero que al estructurar el proyecto descubrieron que la legibilidad del código es vital para el mantenimiento del software y el trabajo en equipo.
+3. **Vocabulario Técnico para el Stand:** En vez de decir *"guardamos los datos para más tarde"*, ante el jurado usá conceptos formales como: **"Arquitectura Offline-First"**, **"Persistencia de datos del lado del cliente"** y **"Sincronización diferida mediante eventos de hardware"**.
