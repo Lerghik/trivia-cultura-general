@@ -1,81 +1,134 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
+<!-- Declara el tipo de documento como HTML5 para que el navegador interprete correctamente el código -->
+
 <html lang="es">
+<!-- Elemento raíz del documento. El atributo lang="es" especifica que el idioma del contenido es español -->
+
 <head>
+    <!-- Contiene metadatos e información de configuración del documento. No se visualiza en el navegador -->
+    
     <meta charset="UTF-8">
+    <!-- Define la codificación de caracteres como UTF-8 para soportar caracteres especiales como tildes y eñes -->
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Configura el viewport para diseño responsivo. Ajusta el ancho al dispositivo y establece escala inicial en 1 -->
     
     <title>Mentes Despiertas - Trivia</title>
+    <!-- Define el título del documento que se muestra en la pestaña del navegador y en resultados de búsqueda -->
     
     <link rel="stylesheet" href="estilos.css">
+    <!-- Vincula la hoja de estilos externa estilos.css para aplicar estilos CSS al documento -->
     
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏆</text></svg>">
+    <!-- Define el favicon de la página utilizando una imagen SVG codificada directamente en el atributo href -->
 </head>
+
 <body>
+    <!-- Contiene todo el contenido visible del documento web -->
 
     <header>
+        <!-- Define la sección de encabezado de la página. Generalmente contiene el logo y elementos de navegación -->
         <h1 id="logo-titulo" style="cursor: pointer; user-select: none;">Mentes Despiertas</h1>
+        <!-- Encabezado de nivel 1. Identificador único logo-titulo para manipulación con CSS y JavaScript. 
+             Estilo inline para cambiar el cursor y deshabilitar la selección de texto -->
         
         <div id="usuario-activo"></div>
+        <!-- Contenedor div vacío. El contenido se inserta dinámicamente mediante JavaScript para mostrar el usuario activo -->
     </header>
 
     <main class="container">
+        <!-- Define el contenido principal de la página. La clase container aplica estilos de centrado y márgenes -->
         
         <section id="pantalla-inicio">
+            <!-- Sección correspondiente a la pantalla de inicio. El id permite mostrar u ocultar la sección mediante JavaScript -->
             <h2>¿Qué tan despierta está tu mente?</h2>
+            <!-- Encabezado de nivel 2 para el título de la sección de inicio -->
+            
             <p>Ingresá tu Nickname para comenzar el desafío de cultura general.</p>
+            <!-- Párrafo con instrucciones para el usuario -->
             
             <input type="text" id="input-nick" placeholder="Ej: JuanPerez12">
+            <!-- Campo de entrada de texto para que el usuario ingrese su nickname. El placeholder muestra un ejemplo -->
             
             <div style="display: flex; gap: 10px; margin-top: 1.5rem; justify-content: center;">
+                <!-- Contenedor div con estilos flexbox para alinear los botones horizontalmente con separación -->
                 <button id="btn-comenzar">Comenzar Desafío</button>
+                <!-- Botón que inicia el desafío. El id permite asociar un evento click desde JavaScript -->
+                
                 <button id="btn-ver-ranking-inicio" style="background-color: #757575;">Ver Posiciones</button>
+                <!-- Botón para mostrar el ranking. Estilo inline define el color de fondo gris -->
             </div>
         </section>
 
         <section id="pantalla-juego" class="oculto">
+            <!-- Sección correspondiente a la pantalla de juego. La clase oculto oculta la sección inicialmente mediante CSS -->
             <div id="progreso-trivia">
+                <!-- Contenedor para mostrar el progreso del usuario en la trivia -->
                 <span id="texto-progreso">Pregunta 1 de 10</span>
+                <!-- Elemento span para mostrar el texto de progreso. Se actualiza dinámicamente con JavaScript -->
+                
                 <div id="barra-progreso">
+                    <!-- Contenedor de la barra de progreso -->
                     <div id="llenado-progreso"></div>
+                    <!-- Elemento que representa el llenado de la barra. Su ancho se modifica con JavaScript según el progreso -->
                 </div>
             </div>
             
             <h3 id="texto-pregunta">Cargando pregunta...</h3>
+            <!-- Encabezado de nivel 3 que muestra la pregunta actual. El contenido se carga dinámicamente -->
             
             <div id="contenedor-opciones" class="opciones-grid"></div>
+            <!-- Contenedor vacío donde JavaScript inserta los botones con las opciones de respuesta -->
         </section>
 
         <section id="pantalla-ranking" class="oculto">
+            <!-- Sección correspondiente a la pantalla de resultados finales. Oculta inicialmente -->
             <h2>¡Desafío Completado!</h2>
+            <!-- Encabezado de nivel 2 para indicar que el desafío ha finalizado -->
+            
             <p id="resultado-usuario"></p>
+            <!-- Párrafo vacío donde JavaScript muestra el puntaje y resultado obtenido por el usuario -->
+            
             <button id="btn-reiniciar" style="margin-top: 1rem;">Volver a Intentar</button>
+            <!-- Botón para reiniciar la trivia. Estilo inline agrega margen superior -->
         </section>
 
         <section id="seccion-tabla-global" class="oculto" style="margin-top: 2rem; border-top: 2px solid #e0e0e0; padding-top: 1.5rem;">
+            <!-- Sección para mostrar la tabla de clasificación global. Oculta inicialmente con estilos inline para separación -->
             <h3 style="text-align: center; margin-bottom: 1rem;">Tabla de Clasificación</h3>
+            <!-- Encabezado de nivel 3 centrado para el título de la tabla -->
             
             <div style="display: flex; gap: 10px; margin-bottom: 1.5rem; justify-content: center;">
+                <!-- Contenedor flexbox para los botones de filtro de la tabla -->
                 <button id="btn-tab-top3" style="background-color: #1A237E; padding: 0.6rem 1rem; font-size: 0.9rem;">🏆 Top 3</button>
+                <!-- Botón para mostrar solo los 3 mejores puntajes. Estilo inline define color, padding y tamaño de fuente -->
+                
                 <button id="btn-tab-general" style="background-color: #757575; padding: 0.6rem 1rem; font-size: 0.9rem;">📋 General</button>
+                <!-- Botón para mostrar la tabla completa de clasificación -->
             </div>
 
             <table>
+                <!-- Define una tabla para mostrar los datos de clasificación -->
                 <thead>
+                    <!-- Agrupa el contenido del encabezado de la tabla -->
                     <tr>
                         <th>Puesto</th>
                         <th>Usuario</th>
                         <th>Puntaje</th>
                     </tr>
                 </thead>
+                
                 <tbody id="tabla-cuerpo"></tbody>
+                <!-- Cuerpo de la tabla vacío. Las filas de datos se insertan dinámicamente con JavaScript -->
             </table>
         </section>
 
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Importa la librería de Supabase desde CDN para gestionar base de datos y autenticación -->
     
     <script src="app-supabase.js"></script>
+    <!-- Vincula el archivo JavaScript principal que contiene la lógica de la aplicación -->
 </body>
 </html>
