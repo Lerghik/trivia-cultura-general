@@ -270,34 +270,27 @@ th {
 }
 
 /* ====================================================================
-   ESTILOS DE RETROALIMENTACIÓN (Feedback de respuestas)
+   ESTILOS DE RETROALIMENTACIÓN (Feedback optimizado para PC y Celular)
    ==================================================================== */
 
-/* Clase que se aplicará al botón correcto */
-.btn-opcion.correcta {
-    /* Pinta el fondo de un color verde suave pero claro */
+/* Si es correcta, se pinta de verde aunque el mouse esté encima (:hover) */
+.btn-opcion.correcta,
+.btn-opcion.correcta:hover {
     background-color: #C8E6C9 !important;
-    
-    /* Pinta el texto y el borde de un verde oscuro para que contraste bien */
     color: #2E7D32 !important;
     border-color: #2E7D32 !important;
-    
-    /* Pone la letra en negrita para resaltar la opción */
     font-weight: bold;
 }
 
-/* Clase que se aplicará al botón incorrecto que tocó el usuario */
-.btn-opcion.incorrecta {
-    /* Pinta el fondo de un color rojo o rosa suave */
+/* Si es incorrecta, se pinta de rojo aunque el mouse esté encima (:hover) */
+.btn-opcion.incorrecta,
+.btn-opcion.incorrecta:hover {
     background-color: #FFCDD2 !important;
-    
-    /* Pinta el texto y el borde de un rojo oscuro */
     color: #C62828 !important;
     border-color: #C62828 !important;
 }
 
-/* Clase de seguridad para evitar que el usuario siga clickeando opciones */
+/* Clase de seguridad para bloquear clics */
 .deshabilitado {
-    /* Desactiva por completo cualquier interacción del mouse con el botón */
     pointer-events: none;
 }
