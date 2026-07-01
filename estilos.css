@@ -187,3 +187,50 @@ th {
     font-weight: bold;
     color: #2E7D32;                     /* Texto verde oscuro */
 }
+
+/* Estilos para la caja contenedora del logo */
+.logo-container {
+    /* Activa Flexbox para poder alinear cosas adentro fácilmente */
+    display: flex;
+    
+    /* Alinea el logo en el centro de izquierda a derecha */
+    justify-content: center;
+    
+    /* Alinea el logo en el centro de arriba a abajo */
+    align-items: center;
+    
+    /* Deja 20px de espacio arriba y abajo. El 'auto' centra la caja en la pantalla */
+    margin: 20px auto;
+    
+    /* Deja 15px de espacio interno a los lados para que el logo nunca toque el borde */
+    padding: 0 15px;
+    
+    /* Le prohíbe a esta caja estirarse más del ancho total de la pantalla */
+    max-width: 100%;
+}
+
+/* Estilos individuales para la imagen del logo */
+.logo-instituto {
+    /* Intenta ocupar todo el ancho disponible del contenedor */
+    width: 100%;
+    
+    /* Pero le pone un freno: nunca va a medir más de 250px en pantallas grandes */
+    max-width: 250px;
+    
+    /* Hace que el alto se calcule solo para que la imagen no se deforme ni se estire */
+    height: auto;
+    
+    /* Asegura que la imagen mantenga su proporción original dentro de su espacio */
+    object-fit: contain;
+    
+    /* Si la pantalla cambia de tamaño, hace que el logo se adapte de forma suave */
+    transition: max-width 0.3s ease;
+}
+
+/* Regla responsive para pantallas muy chicas (como celulares de menos de 360px de ancho) */
+@media (max-width: 360px) {
+    .logo-instituto {
+        /* En pantallas diminutas, bajamos el tamaño máximo a 180px para que no moleste */
+        max-width: 180px;
+    }
+}
