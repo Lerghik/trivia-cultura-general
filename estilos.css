@@ -24,9 +24,51 @@ header {
     color: #ffffff;           /* Letras blancas */
     padding: 1rem 2rem;
     display: flex;
-    justify-content: space-between; /* Separa el título a la izquierda y el usuario a la derecha */
+    justify-content: space-between; /* Separa el título/logo a la izquierda y el usuario a la derecha */
     align-items: center;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Sombra sutil abajo del header para darle profundidad */
+}
+
+/* --- NUEVA SECCIÓN: CAJA BRANDING (Agrupa el logo y el título juntos) --- */
+.branding-box {
+    /* Activa flexbox para poner el logo al lado del título */
+    display: flex;
+    
+    /* Disposición horizontal por defecto */
+    flex-direction: row;
+    
+    /* Centra el logo verticalmente con respecto al texto */
+    align-items: center;
+    
+    /* Deja un espacio de 15 píxeles entre el logo y el texto */
+    gap: 15px;
+}
+
+/* Caja contenedora para limitar el tamaño físico asignado al logo */
+.logo-container {
+    /* Define un ancho fijo de 50px para que mantenga un tamaño sutil en el header */
+    width: 50px;
+    
+    /* Define un alto fijo idéntico para que el contenedor sea un cuadrado perfecto */
+    height: 50px;
+    
+    /* Oculta cualquier parte de la imagen que intente salirse de este cuadrado */
+    overflow: hidden;
+}
+
+/* Comportamiento directo de la imagen dentro de su caja */
+.logo-instituto {
+    /* Fuerza a la imagen a estirarse al 100% del ancho de la caja (50px) */
+    width: 100%;
+    
+    /* Fuerza a la imagen a estirarse al 100% del alto de la caja (50px) */
+    height: 100%;
+    
+    /* Mantiene las proporciones originales del escudo del instituto sin deformarlo */
+    object-fit: contain;
+    
+    /* TRUCO MÁGICO: Fusiona el fondo blanco del logo con el fondo azul de tu header, volviéndolo invisible */
+    mix-blend-mode: multiply;
 }
 
 #usuario-activo {
@@ -188,49 +230,25 @@ th {
     color: #2E7D32;                     /* Texto verde oscuro */
 }
 
-/* Estilos para la caja contenedora del logo */
-.logo-container {
-    /* Activa Flexbox para poder alinear cosas adentro fácilmente */
-    display: flex;
-    
-    /* Alinea el logo en el centro de izquierda a derecha */
-    justify-content: center;
-    
-    /* Alinea el logo en el centro de arriba a abajo */
-    align-items: center;
-    
-    /* Deja 20px de espacio arriba y abajo. El 'auto' centra la caja en la pantalla */
-    margin: 20px auto;
-    
-    /* Deja 15px de espacio interno a los lados para que el logo nunca toque el borde */
-    padding: 0 15px;
-    
-    /* Le prohíbe a esta caja estirarse más del ancho total de la pantalla */
-    max-width: 100%;
-}
 
-/* Estilos individuales para la imagen del logo */
-.logo-instituto {
-    /* Intenta ocupar todo el ancho disponible del contenedor */
-    width: 100%;
-    
-    /* Pero le pone un freno: nunca va a medir más de 250px en pantallas grandes */
-    max-width: 250px;
-    
-    /* Hace que el alto se calcule solo para que la imagen no se deforme ni se estire */
-    height: auto;
-    
-    /* Asegura que la imagen mantenga su proporción original dentro de su espacio */
-    object-fit: contain;
-    
-    /* Si la pantalla cambia de tamaño, hace que el logo se adapte de forma suave */
-    transition: max-width 0.3s ease;
-}
+/* --- SECCIÓN RESPONSIVE PARA EL HEADER (Pantallas de celulares de 600px o menos) --- */
+@media (max-width: 600px) {
+    header {
+        /* En celulares, permite que los elementos del header se apilen en columnas si el espacio es muy justo */
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
 
-/* Regla responsive para pantallas muy chicas (como celulares de menos de 360px de ancho) */
-@media (max-width: 360px) {
-    .logo-instituto {
-        /* En pantallas diminutas, bajamos el tamaño máximo a 180px para que no moleste */
-        max-width: 180px;
+    .branding-box {
+        /* Coloca el logo ARRIBA y el texto "Mentes Despiertas" ABAJO únicamente en pantallas móviles */
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .logo-container {
+        /* Reducimos un poquito el logo a 45px en celular para ganar espacio vertical */
+        width: 45px;
+        height: 45px;
     }
 }
