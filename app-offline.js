@@ -186,13 +186,35 @@ window.onload = function() {
     }
 
     // Encargada de auditar si la opción elegida por el jugador es la acertada
+    // Encargada de auditar si la opción elegida por el jugador es la acertada con feedback visual
     function procesarRespuesta(indiceSeleccionado) {
-        // Evalúa si el número del botón cliqueado es idéntico al índice guardado como correcto (.a)
-        if(indiceSeleccionado === bancoPreguntas[juego.preguntaActual].a) {
-            juego.puntaje += 10; // Incrementa el acumulador de puntos en 10 unidades
+        // 1. Capturamos todos los botones que están dentro del contenedor de opciones en este instante
+        const contenedor = document.getElementById('contenedor-opciones');
+        const botones = contenedor.querySelectorAll('.btn-opcion');
+        
+        // 2. Bloqueamos todos los botones inmediatamente para evitar múltiples clics accidentales
+        botones.forEach(btn => btn.classList.add('deshabilitado'));
+
+        // Obtener el índice de la respuesta correcta de la pregunta actual
+        const indiceCorrecto = bancoPreguntas[juego.preguntaActual].a;
+
+        // 3. Evaluamos si el usuario acertó o se equivocó
+        if (indiceSeleccionado === indiceCorrecto) {
+            // Si acertó: sumamos puntos y pintamos de verde el botón que el usuario cliqueó
+            juego.puntaje += 10;
+            botones[indiceSeleccionado].classList.add('correcta');
+        } else {
+            // Si falló: pintamos de rojo el botón equivocado que tocó
+            botones[indiceSeleccionado].classList.add('incorrecta');
+            // Y pintamos de verde el botón que contenía la respuesta correcta real
+            botones[indiceCorrecto].classList.add('correcta');
         }
-        juego.preguntaActual++; // Avanza el contador de posición de preguntas para la siguiente iteración
-        cargarPregunta();       // Recarga la interfaz de usuario con el nuevo estado
+
+        // 4. Ponemos un temporizador de 1500 milisegundos (1.5 segundos) antes de pasar al siguiente paso
+        setTimeout(() => {
+            juego.preguntaActual++; // Avanza el contador de posición de preguntas
+            cargarPregunta();       // Recarga la interfaz con la nueva pregunta limpiando los estilos
+        }, 1500);
     }
 
     // Encargada de procesar el cierre del juego y resguardar el récord localmente
