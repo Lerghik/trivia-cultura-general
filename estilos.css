@@ -17,63 +17,69 @@ body {
 }
 
 /* ====================================================================
-   DISEÑO DE LA CABECERA (Header)
+   DISEÑO DE LA CABECERA (Header) - Modificado para centrar el título
    ==================================================================== */
 header {
-    background-color: #1A237E; /* Azul marino institucional */
-    color: #ffffff;           /* Letras blancas */
-    padding: 1rem 2rem;
+    /* Mantiene el color azul institucional */
+    background-color: #1A237E; 
+    
+    /* Mantiene las letras blancas */
+    color: #ffffff;           
+    
+    /* Reducimos un poco el padding lateral para evitar problemas de espacio */
+    padding: 1rem;
+    
+    /* Sigue activando Flexbox para organizar el contenido */
     display: flex;
-    justify-content: space-between; /* Separa el título/logo a la izquierda y el usuario a la derecha */
+    
+    /* ¡CAMBIO CLAVE! Ahora centra el contenido principal (el branding-box) en el eje horizontal */
+    justify-content: center;   
+    
+    /* Centra el contenido verticalmente */
     align-items: center;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Sombra sutil abajo del header para darle profundidad */
+    
+    /* Mantiene la sombra sutil para dar profundidad */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
+    
+    /* ¡NUEVA PROPIEDAD CRÍTICA! Establece el header como punto de referencia */
+    /* Esto permite que los elementos internos con posición absoluta se alineen respecto al header */
+    position: relative; 
+    
+    /* Asegura que el header ocupe todo el ancho disponible */
+    width: 100%;
 }
 
-/* --- NUEVA SECCIÓN: CAJA BRANDING (Agrupa el logo y el título juntos) --- */
+/* --- SECCIÓN: CAJA BRANDING (Logo + Título) --- */
 .branding-box {
-    /* Activa flexbox para poner el logo al lado del título */
+    /* Sigue usando Flexbox para juntar el logo y el texto */
     display: flex;
     
-    /* Disposición horizontal por defecto */
+    /* Disposición horizontal por defecto en computadoras */
     flex-direction: row;
     
-    /* Centra el logo verticalmente con respecto al texto */
+    /* Centra el logo verticalmente con la tipografía */
     align-items: center;
     
-    /* Deja un espacio de 15 píxeles entre el logo y el texto */
+    /* Deja un espacio de 15 píxeles entre el escudo y el texto */
     gap: 15px;
 }
 
-/* Caja contenedora para limitar el tamaño físico asignado al logo */
-.logo-container {
-    /* Define un ancho fijo de 50px para que mantenga un tamaño sutil en el header */
-    width: 50px;
-    
-    /* Define un alto fijo idéntico para que el contenedor sea un cuadrado perfecto */
-    height: 50px;
-    
-    /* Oculta cualquier parte de la imagen que intente salirse de este cuadrado */
-    overflow: hidden;
-}
-
-/* Comportamiento directo de la imagen dentro de su caja */
-.logo-instituto {
-    /* Fuerza a la imagen a estirarse al 100% del ancho de la caja (50px) */
-    width: 100%;
-    
-    /* Fuerza a la imagen a estirarse al 100% del alto de la caja (50px) */
-    height: 100%;
-    
-    /* Mantiene las proporciones originales del escudo del instituto sin deformarlo */
-    object-fit: contain;
-    
-    /* TRUCO MÁGICO: Fusiona el fondo blanco del logo con el fondo azul de tu header, volviéndolo invisible */
-    mix-blend-mode: multiply;
-}
-
+/* --- SECCIÓN: USUARIO ACTIVO (Cápsula de la derecha) --- */
 #usuario-activo {
+    /* Cambia su comportamiento de bloque común a posicionamiento absoluto */
+    /* Esto lo "saca" del flujo normal para que no empuje al título hacia la izquierda */
+    position: absolute;
+    
+    /* Lo clava exactamente en el extremo derecho del header */
+    right: 2rem;
+    
+    /* Lo centra verticalmente usando un truco matemático respecto al techo del header */
+    top: 50%;
+    transform: translateY(-50%);
+    
+    /* Tus estilos de diseño originales se conservan intactos */
     font-weight: 600;
-    background-color: rgba(255, 255, 255, 0.2); /* Fondo blanco semitransparente tipo cápsula */
+    background-color: rgba(255, 255, 255, 0.2); 
     padding: 0.4rem 0.8rem;
     border-radius: 20px;
 }
